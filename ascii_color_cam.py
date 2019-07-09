@@ -30,19 +30,17 @@ def resize(frame, size=24):
     return result
 
 
-def resize_color(frame):
+def resize_color(frame, size=24):
     recalibration_factor = 255 / frame.max()
-
-    b_ = resize(frame[:, :, 0], size=24)
     vect_ = np.vectorize(lambda x: recalibration_factor * x)
+
+    b_ = resize(frame[:, :, 0], size=size)
     b_ = vect_(b_)
 
-    g_ = resize(frame[:, :, 1], size=24)
-    #     vect_ = np.vectorize(lambda x: 128 * x / g_.mean())
+    g_ = resize(frame[:, :, 1], size=size)
     g_ = vect_(g_)
 
-    r_ = resize(frame[:, :, 2], size=24)
-    #     vect_ = np.vectorize(lambda x: 128 * x / r_.mean())
+    r_ = resize(frame[:, :, 2], size=size)
     r_ = vect_(r_)
 
     #     vect_ = np.vectorize(lambda x: 128 * x / frame.mean())
@@ -50,9 +48,9 @@ def resize_color(frame):
     return r_, g_, b_
 
 
-def run(background=False, black=False):
+def run(background=False, black=False, size=24):
     frame = get_frame()
-    r_, g_, b_ = resize_color(frame)
+    r_, g_, b_ = resize_color(frame, size=size)
 
     result = np.empty_like(r_, dtype=object)
 
@@ -93,12 +91,16 @@ if __name__ == '__main__':
 
     parser.add_argument('-m', type=int)
 
+    parser.add_argument('-s', '--size', type=int, default=24)
+
     args = parser.parse_args()
 
     if args.m:
         for _ in range(args.m):
             run(background=args.background,
-                black=args.black)
+                black=args.black,
+                size=args.size)
     else:
         run(background=args.background,
-            black=args.black)
+            black=args.black,
+            size=args.size)
