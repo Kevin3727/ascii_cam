@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+__pycache__
+.DS_Store
+
+jupyter/
+
+.idea
+.pytest_cache
