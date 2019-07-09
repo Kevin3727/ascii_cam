@@ -77,7 +77,7 @@ def run(background=False, black=False, size=24):
         print('')
 
 
-def show_frames(background=False, black=False, size=24):
+def show_frames(background=False, black=False, size=24, no_clear=False):
     vc = cv2.VideoCapture(0)
     if vc.isOpened():  # try to get the first frame
         try:
@@ -111,7 +111,8 @@ def show_frames(background=False, black=False, size=24):
                                 int(r_[i, j])) + ';' + str(
                                 int(g_[i, j])) + ';' + str(
                                 int(b_[i, j])) + "m#\033[0m"
-                os.system('clear')
+                if no_clear:
+                    os.system('clear')
                 for row in result:
                     for item in row:
                         print(item, end='')
@@ -135,6 +136,10 @@ if __name__ == '__main__':
                         action='store_true',
                         default=False)
 
+    parser.add_argument('-nc', '--no-clear',
+                        action='store_true',
+                        default=False)
+
     parser.add_argument('-s', '--size', type=int, default=24)
 
     args = parser.parse_args()
@@ -142,7 +147,8 @@ if __name__ == '__main__':
     if args.video:
         show_frames(background=args.background,
                     black=args.black,
-                    size=args.size)
+                    size=args.size,
+                    no_clear=args.no_clear)
     else:
         run(background=args.background,
             black=args.black,
