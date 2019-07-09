@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 
 import cv2
@@ -110,7 +111,7 @@ def show_frames(background=False, black=False, size=24):
                                 int(r_[i, j])) + ';' + str(
                                 int(g_[i, j])) + ';' + str(
                                 int(b_[i, j])) + "m#\033[0m"
-
+                os.system('clear')
                 for row in result:
                     for item in row:
                         print(item, end='')
