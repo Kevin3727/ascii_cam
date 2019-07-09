@@ -36,7 +36,7 @@ def ascii_map(pixel):
     if pixel < 85:
         return '#'
     if pixel < 170:
-        return '='
+        return ';'
     return '.'
 
 
