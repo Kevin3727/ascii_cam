@@ -111,7 +111,7 @@ def show_frames(background=False, black=False, size=24, no_clear=False):
                                 int(r_[i, j])) + ';' + str(
                                 int(g_[i, j])) + ';' + str(
                                 int(b_[i, j])) + "m#\033[0m"
-                if no_clear:
+                if not no_clear:
                     os.system('clear')
                 for row in result:
                     for item in row:
