@@ -13,9 +13,9 @@ def get_frame():
     return np.array()
 
 
-def resize(frame, size=24):
+def resize(frame, size=24, x_factor=2.5):
     y_size = size
-    x_size = int(2 * size * frame.shape[1] / frame.shape[0])
+    x_size = int(x_factor * size * frame.shape[1] / frame.shape[0])
     result = np.empty([y_size, x_size])
 
     x_depth = int(frame.shape[1] / x_size)
@@ -43,8 +43,6 @@ def resize_color(frame, size=24):
     r_ = resize(frame[:, :, 2], size=size)
     r_ = vect_(r_)
 
-    #     vect_ = np.vectorize(lambda x: 128 * x / frame.mean())
-    #     return vect_(r_), vect_(b_), vect_(g_)
     return r_, g_, b_
 
 
