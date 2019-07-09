@@ -1,11 +1,11 @@
 import argparse
+import sys
 
 import cv2
 import numpy as np
 
 
 def get_frame():
-    cv2.namedWindow("preview")
     vc = cv2.VideoCapture(0)
     if vc.isOpened():  # try to get the first frame
         rval, frame = vc.read()
@@ -76,6 +76,49 @@ def run(background=False, black=False, size=24):
         print('')
 
 
+def show_frames(background=False, black=False, size=24):
+    vc = cv2.VideoCapture(0)
+    if vc.isOpened():  # try to get the first frame
+        try:
+            while True:
+                rval, frame = vc.read()
+
+                frame = cv2.flip(frame, 1)
+
+                r_, g_, b_ = resize_color(frame, size=size)
+
+                result = np.empty_like(r_, dtype=object)
+
+                if background:
+                    for i in range(result.shape[0]):
+                        for j in range(result.shape[1]):
+                            result[i, j] = "\033[48;2;" + str(
+                                int(r_[i, j])) + ';' + str(
+                                int(g_[i, j])) + ';' + str(
+                                int(b_[i, j])) + "m \033[0m"
+                elif black:
+                    for i in range(result.shape[0]):
+                        for j in range(result.shape[1]):
+                            result[i, j] = "\033[48;2;0;0;0m\033[38;2;" + str(
+                                int(r_[i, j])) + ';' + str(
+                                int(g_[i, j])) + ';' + str(
+                                int(b_[i, j])) + "m#\033[0m"
+                else:
+                    for i in range(result.shape[0]):
+                        for j in range(result.shape[1]):
+                            result[i, j] = "\033[38;2;" + str(
+                                int(r_[i, j])) + ';' + str(
+                                int(g_[i, j])) + ';' + str(
+                                int(b_[i, j])) + "m#\033[0m"
+
+                for row in result:
+                    for item in row:
+                        print(item, end='')
+                    print('')
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="""ASCII cam""")
 
@@ -87,17 +130,18 @@ if __name__ == '__main__':
                         action='store_true',
                         default=False)
 
-    parser.add_argument('-m', type=int)
+    parser.add_argument('-v', '--video',
+                        action='store_true',
+                        default=False)
 
     parser.add_argument('-s', '--size', type=int, default=24)
 
     args = parser.parse_args()
 
-    if args.m:
-        for _ in range(args.m):
-            run(background=args.background,
-                black=args.black,
-                size=args.size)
+    if args.video:
+        show_frames(background=args.background,
+                    black=args.black,
+                    size=args.size)
     else:
         run(background=args.background,
             black=args.black,
